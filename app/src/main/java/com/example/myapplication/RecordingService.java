@@ -159,7 +159,7 @@ public class RecordingService extends Service {
                 "-i", rawFilePath,
                 "-acodec", "libmp3lame",
                 "-b:a", "128k",
-                mp3File.getAbsolutePath() // Use mp3File here
+                mp3File.getAbsolutePath()
         };
 
         FFmpeg.executeAsync(cmd, (executionId, returnCode) -> {
@@ -213,7 +213,7 @@ public class RecordingService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Recording Service")
                 .setContentText("Recording in progress")
-                .setSmallIcon(R.drawable.ic_launcher_background) // Replace with your app's icon
+                .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
                 .build();
     }

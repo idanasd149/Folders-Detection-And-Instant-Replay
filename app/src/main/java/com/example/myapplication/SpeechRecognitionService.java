@@ -29,7 +29,7 @@ public class SpeechRecognitionService extends Service {
     private static final String CHANNEL_ID = "speech_recognition_service_channel";
     private SpeechRecognizer speechRecognizer;
     private MediaPlayer mediaPlayer;
-    private static final long MIN_ALERT_INTERVAL = 5000; // Minimum time interval between alert sounds in milliseconds
+    private static final long MIN_ALERT_INTERVAL = 5000;
     private Handler alertHandler;
     private Runnable alertRunnable;
 
@@ -89,7 +89,7 @@ public class SpeechRecognitionService extends Service {
                 speechRecognizer.cancel();
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     speechRecognizer.startListening(intent);
-                }, 1000); // Introduce a delay of 1 second before restarting the listening process
+                }, 1000);
             }
 
             @Override
@@ -104,7 +104,7 @@ public class SpeechRecognitionService extends Service {
                 }
 
                 if (alertRunnable != null) {
-                    return; // If the alertRunnable is not null, it means the minimum interval hasn't passed yet.
+                    return;
                 }
 
                 ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
