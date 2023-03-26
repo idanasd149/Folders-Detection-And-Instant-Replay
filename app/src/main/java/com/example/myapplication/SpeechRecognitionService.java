@@ -94,25 +94,32 @@ public class SpeechRecognitionService extends Service {
 
             @Override
             public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                processResults(matches);
                 speechRecognizer.startListening(intent);
             }
 
             @Override
             public void onPartialResults(Bundle partialResults) {
-                if (alertHandler == null) {
-                    alertHandler = new Handler(Looper.getMainLooper());
-                }
-
-                if (alertRunnable != null) {
-                    return;
-                }
-
                 ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                processResults(matches);
+            }
+            @Override
+            public void onEvent(int eventType, Bundle params) {}
+
+            private void processResults(ArrayList<String> matches) {
+                if (alertRunnable != null) {
+                    return; // If the alertRunnable is not null, it means the minimum interval hasn't passed yet.
+                }
+
                 if (matches != null) {
                     for (String match : matches) {
                         if (match.contains("תיקייה") || match.contains("תיקיות") || match.contains("תיקיה") || match.contains("folder") || match.contains("folders") || match.contains("root") || match.contains("directories") || match.contains("directory")) {
                             mediaPlayer.start();
                             alertRunnable = () -> alertRunnable = null;
+                            if (alertHandler == null) {
+                                alertHandler = new Handler(Looper.getMainLooper());
+                            }
                             alertHandler.postDelayed(alertRunnable, MIN_ALERT_INTERVAL);
                             break;
                         }
@@ -120,11 +127,6 @@ public class SpeechRecognitionService extends Service {
                 }
             }
 
-
-
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
         });
 
         speechRecognizer.startListening(intent);
